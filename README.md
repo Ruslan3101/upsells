@@ -1,4 +1,7 @@
 # React + TypeScript + Vite
+# upsells
+App for business owners who don't wanna deal with sales anymore but wanna make moneys
+
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
