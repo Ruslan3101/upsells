@@ -1,6 +1,6 @@
 import {Button, Container, Nav, Navbar as NavbarBs} from "react-bootstrap";
 import {NavLink} from "react-router-dom";
-import {AdminPanel} from "../pages";
+import {AdminPanel} from "../../pages";
 
 export function Navbar() {
     return (

@@ -1,6 +1,6 @@
-import {Col, Row} from "react-bootstrap";
+import {Col} from "react-bootstrap";
 import history from "../data/data.json"
-import {HistoryItem} from "../components/HistoryItem.tsx";
+import {HistoryItem} from "../components/FormBuilder/History/HistoryItem.tsx";
 
 export function History() {
  return (

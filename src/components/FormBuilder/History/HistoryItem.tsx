@@ -1,11 +1,5 @@
 import {Accordion, Button, Card} from "react-bootstrap";
-import {Event, EventDate} from "./types/types.tsx";
-
-interface HistoryItemProps{
-    events: Event[];
-    year: string;
-    month: string;
-}
+import {Event, EventDate} from "../../types/types.tsx";
 
 
 export function HistoryItem(
@@ -22,7 +16,7 @@ export function HistoryItem(
         overhead,
         sellingPrice,
         laborCost
-    }: HistoryItemProps
+    }: Event
 ) {
     // const [startDate, setStartDate] = useState('');
     // const [endDate, setEndDate] = useState('');

@@ -19,11 +19,11 @@ export type EventDate = {
 }
 
 export type TextAreaProps = {
-    text: string;
+    text?: string;
     ariaLabel?: string;
     className?: string;
-    style?: {
+    style?: Partial<{
         width: string;
         height: string;
-    };
+    }>;
 }

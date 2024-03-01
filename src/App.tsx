@@ -1,9 +1,8 @@
 import {Container} from "react-bootstrap";
 import {Route, Routes} from "react-router-dom";
-import {Calculator, History, Reports, AdminPanel} from "./pages"
-import {Navbar} from "./components/Navbar.tsx";
-
-
+import {Estimate, History, Reports, AdminPanel} from "./pages"
+import {Navbar} from "./components/Navbar/Navbar.tsx";
+import "./styles/index.css"
 function App() {
 
   return (
@@ -11,7 +10,7 @@ function App() {
         <Navbar/>
         <Container >
             <Routes>
-                <Route path="/" element={<Calculator/>}/>
+                <Route path="/" element={<Estimate/>}/>
                 <Route path="/history" element={<History/>}/>
                 <Route path="/reports" element={<Reports/>}/>
                 <Route path="/admin" element={<AdminPanel/>}/>
