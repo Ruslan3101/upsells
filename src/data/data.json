@@ -1,0 +1,83 @@
+[
+  {
+    "id": 0,
+    "date": "Wed Feb 11 2024",
+    "invoiceId": "123C4",
+    "hourlyRate": 60,
+    "qtTechnicians": 1,
+    "timeRequired": 2,
+    "materials": 200,
+    "salesTax": 9.38,
+    "profitInPercent": 25,
+    "overhead": 22.67,
+    "sellingPrice":  643,
+    "laborCost": 443
+  },
+  {
+    "id": 1,
+    "date": "Wed Feb 11 2024",
+    "invoiceId": "12-WE34",
+    "hourlyRate": 60,
+    "qtTechnicians": 1,
+    "timeRequired": 2,
+    "materials": 200,
+    "salesTax": 9.38,
+    "profitInPercent": 25,
+    "overhead": 22.67,
+    "sellingPrice":  643,
+    "laborCost": 443
+  },
+  {
+    "id": 2,
+    "date": "Wed Feb 11 2024",
+    "invoiceId": "321C4",
+    "hourlyRate": 60,
+    "qtTechnicians": 1,
+    "timeRequired": 2,
+    "materials": 200,
+    "salesTax": 9.38,
+    "profitInPercent": 25,
+    "overhead": 22.67,
+    "sellingPrice":  643,
+    "laborCost": 443
+  },{
+  "id": 3,
+  "date": "Wed Feb 11 2024",
+  "invoiceId": "CAS324",
+  "hourlyRate": 60,
+  "qtTechnicians": 1,
+  "timeRequired": 2,
+  "materials": 200,
+  "salesTax": 9.38,
+  "profitInPercent": 25,
+  "overhead": 22.67,
+  "sellingPrice":  643,
+  "laborCost": 443
+},{
+  "id": 4,
+  "date": "Wed Feb 11 2024",
+  "invoiceId": "SAS324",
+  "hourlyRate": 60,
+  "qtTechnicians": 1,
+  "timeRequired": 2,
+  "materials": 300,
+  "salesTax": 9.38,
+  "profitInPercent": 25,
+  "overhead": 22.67,
+  "sellingPrice":  743,
+  "laborCost": 443
+},{
+  "id": 5,
+  "date": "Wed Feb 11 2024",
+  "invoiceId": "CAF-D4",
+  "hourlyRate": 60,
+  "qtTechnicians": 1,
+  "timeRequired": 2,
+  "materials": 200,
+  "salesTax": 9.38,
+  "profitInPercent": 25,
+  "overhead": 22.67,
+  "sellingPrice":  643,
+  "laborCost": 443
+}
+]
