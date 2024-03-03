@@ -4,12 +4,47 @@ import Form from "react-bootstrap/Form";
 import {BsInputGroupText} from "./BsInputGroupText.tsx";
 import {BsInput} from "./BsInput.tsx";
 import '../../../styles/index.css'
+import {useState} from "react";
+import {AddTechRate} from "./AddTechRate.tsx";
+
+type AddTechRate = {
+    handleAddTechClick: (id: number) => void;
+    handleRemoveTechClick: (id: number) => void;
+}
+
+interface TechQuantity  {
+    id: number;
+    text: string;
+}
 
 
-export function FormBuilder() {
+export function FormBuilder(): AddTechRate {
+    const [addTech, setAddTech] = useState<TechQuantity[]>([])
+
+    const  handleAddTechClick=() =>{
+        setAddTech(originalTech => [
+            ...originalTech,
+            {
+                id: originalTech.length + 1,
+                text: "Extra Tech in count $65"
+            }
+            ])
+            
+    }
+
+
+
+    const handleRemoveTechClick = (id: number) => {      
+        const updatedTechList = addTech.filter(tech => tech.id !== id )
+        setAddTech([...updatedTechList])
+
+    
+    }
     return (
         <div>
             <h1>
+
+
 
                 <Card className='p-2 border-0 shadow-sm'>
 
@@ -30,9 +65,13 @@ export function FormBuilder() {
                             title="Houry Rate"
                             id="input-group-dropdown-1"
                             className="bg-primary"
+                            style={{width: "130px"}}
+
                         >
                             {/*Dropdown Item*/}
-                            <Dropdown.Item href="#">Add Tech</Dropdown.Item>
+                            <Dropdown.Item href="#"
+                                           onClick={handleAddTechClick}
+                            >Add Tech</Dropdown.Item>
                         </DropdownButton>
 
                         {/*Hourly rate Input*/}
@@ -41,12 +80,12 @@ export function FormBuilder() {
                             ariaLabel="Technician an hour"
                         />
 
+
                         {/*Workload Text*/}
                         <BsInputGroupText
                             text="Workload"
                             ariaLabel=""
-                            className="ms-2 "
-
+                            className="ms-2"
                         />
 
                         {/*Workload Input */}
@@ -54,7 +93,17 @@ export function FormBuilder() {
                             text="2 hours"
                             ariaLabel="Time required to complete the job"/>
                     </InputGroup>
+                    {addTech.map((tech) => (
 
+
+                            <AddTechRate 
+                            key={tech.id} 
+                            handleRemoveTechClick={handleRemoveTechClick}
+                            id={tech.id}
+                            />
+
+                        )
+                    )}
                     {/*Amount Text */}
                     <InputGroup className="mb-3 mt-3">
                         <BsInputGroupText text="$"/>
