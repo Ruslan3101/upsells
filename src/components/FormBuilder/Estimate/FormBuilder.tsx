@@ -7,19 +7,19 @@ import '../../../styles/index.css'
 import {useState} from "react";
 import {AddTechRate} from "./AddTechRate.tsx";
 
-type AddTechRate = {
-    handleAddTechClick: (id: number) => void;
-    handleRemoveTechClick: (id: number) => void;
-}
+// interface AddTechRate {
+//     handleAddTechClick: (id: number) => void;
+//     handleRemoveTechClick: (id: number) => void;
+// }
 
-interface TechQuantity  {
+interface InputId  {
     id: number;
     text: string;
 }
 
 
-export function FormBuilder(): AddTechRate {
-    const [addTech, setAddTech] = useState<TechQuantity[]>([])
+export function FormBuilder(){
+    const [addTech, setAddTech] = useState<InputId[]>([])
 
     const  handleAddTechClick=() =>{
         setAddTech(originalTech => [
@@ -28,8 +28,7 @@ export function FormBuilder(): AddTechRate {
                 id: originalTech.length + 1,
                 text: "Extra Tech in count $65"
             }
-            ])
-            
+            ])   
     }
 
 
@@ -37,8 +36,6 @@ export function FormBuilder(): AddTechRate {
     const handleRemoveTechClick = (id: number) => {      
         const updatedTechList = addTech.filter(tech => tech.id !== id )
         setAddTech([...updatedTechList])
-
-    
     }
     return (
         <div>
