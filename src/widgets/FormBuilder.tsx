@@ -1,13 +1,17 @@
 import { Button, Card, DropdownButton, InputGroup } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
-import { BsInputGroupText } from "./BsInputGroupText.tsx";
-import { BsInput } from "./BsInput.tsx";
-import "../../../styles/index.css";
+import {
+  AddTechRate,
+  BsInput,
+  BsInputGroupText,
+} from "../components/FormBuilder/EstimateForm";
+// import { BsInputGroupText } from "../components/FormBuilder/Estimate/BsInputGroupText.tsx";
+// import { BsInput } from "../components/FormBuilder/Estimate/BsInput.tsx";
 import { useState } from "react";
-import { AddTechRate } from "./AddTechRate.tsx";
+// import { AddTechRate } from "../components/FormBuilder/Estimate/AddTechRate.tsx";
 import { idGenerator } from "components/utils/idGenerator.tsx";
-import { BsCalculationForm } from "./BsCalculationForm.tsx";
+// import { BsCalculationForm } from "../components/FormBuilder/Estimate/BsCalculationForm.tsx";
 
 // interface AddTechRate {
 //     handleAddTechClick: (id: number) => void;

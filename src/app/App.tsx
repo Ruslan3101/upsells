@@ -1,8 +1,8 @@
 import { Container } from "react-bootstrap";
 import { Route, Routes } from "react-router-dom";
-import { Estimate, History, Reports, AdminPanel } from "./pages";
-import { Navbar } from "./components/Navbar/Navbar.tsx";
 import "./styles/index.css";
+import { AdminPanel, Estimate, Reports, History } from "../pages";
+import { Navbar } from "../components/Navbar/Navbar";
 function App() {
   return (
     <div>

@@ -2,7 +2,7 @@ import { BsInputGroupText } from "./BsInputGroupText.tsx";
 import { BsInput } from "./BsInput.tsx";
 import { CloseButton } from "react-bootstrap";
 
-export const AddTechRate = ({  handleRemoveTechClick, id }) => {
+export const AddTechRate = ({ handleRemoveTechClick, id }) => {
   return (
     <div className="d-flex mt-3" style={{ width: "51%" }}>
       <BsInputGroupText

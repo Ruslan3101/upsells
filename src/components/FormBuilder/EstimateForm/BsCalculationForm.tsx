@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Carousel from "react-bootstrap/Carousel";
-import ExampleCarouselImage from "components/ExampleCarouselImage";
 
 export function BsCalculationForm() {
   const [index, setIndex] = useState(0);
@@ -12,7 +11,7 @@ export function BsCalculationForm() {
   return (
     <Carousel activeIndex={index} onSelect={handleSelect}>
       <Carousel.Item>
-        <ExampleCarouselImage text="First slide" />
+        {/* <ExampleCarouselImage text="First slide" />
         <Carousel.Caption>
           <h3>First slide label</h3>
           <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
@@ -26,7 +25,7 @@ export function BsCalculationForm() {
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
-        <ExampleCarouselImage text="Third slide" />
+        <ExampleCarouselImage text="Third slide" /> */}
         <Carousel.Caption>
           <h3>Third slide label</h3>
           <p>

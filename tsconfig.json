@@ -21,21 +21,21 @@
     "noFallthroughCasesInSwitch": true,
 
     /* Path */
-    "baseUrl": "src",
-//    "paths": {
-//      "@components": ["./components"],
-//      "@components/*": ["./components/*"],
-//      "@hooks": ["./hooks"],
-//      "@hooks/*": ["./hooks/*"],
-//      "@pages": ["./pages"],
-//      "@pages/*": ["./pages/*"],
-//      "@service": ["./service"],
-//      "@service/*": ["./service/*"],
-//      "@types": ["./types"],
-//      "@types/*": ["./types/*"],
-//      "@utils": ["./utils"],
-//      "@utils/*": ["./utils/*"]
-//    }
+    "baseUrl": "src"
+    //    "paths": {
+    //      "@components": ["./components"],
+    //      "@components/*": ["./components/*"],
+    //      "@hooks": ["./hooks"],
+    //      "@hooks/*": ["./hooks/*"],
+    //      "@pages": ["./pages"],
+    //      "@pages/*": ["./pages/*"],
+    //      "@service": ["./service"],
+    //      "@service/*": ["./service/*"],
+    //      "@types": ["./types"],
+    //      "@types/*": ["./types/*"],
+    //      "@utils": ["./utils"],
+    //      "@utils/*": ["./utils/*"]
+    //    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
