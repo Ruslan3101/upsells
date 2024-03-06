@@ -1,9 +1,9 @@
 import { InputGroup } from "react-bootstrap";
 import React from "react";
-import { TextAreaProps } from "../../types/types.tsx";
+import { TextAreaProps } from "../../../types/types.tsx";
 
 // Explicitly specify the type of BsInputGroupText
-export const BsInputGroupText: React.FC<TextAreaProps> = ({
+export const InputGroupText: React.FC<TextAreaProps> = ({
   text,
   ariaLabel,
   className,

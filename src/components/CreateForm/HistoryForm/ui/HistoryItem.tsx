@@ -1,5 +1,5 @@
 import { Accordion, Button, Card } from "react-bootstrap";
-import { Event, EventDate } from "../../types/types.tsx";
+import { Event, EventDate } from "../../../types/types.tsx";
 
 export function HistoryItem({
   id,

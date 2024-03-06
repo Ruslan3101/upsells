@@ -2,44 +2,16 @@ import { Button, Card, DropdownButton, InputGroup } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
 import {
-  AddTechRate,
-  BsInput,
-  BsInputGroupText,
-} from "../components/FormBuilder/EstimateForm";
-// import { BsInputGroupText } from "../components/FormBuilder/Estimate/BsInputGroupText.tsx";
-// import { BsInput } from "../components/FormBuilder/Estimate/BsInput.tsx";
-import { useState } from "react";
-// import { AddTechRate } from "../components/FormBuilder/Estimate/AddTechRate.tsx";
-import { idGenerator } from "components/utils/idGenerator.tsx";
-// import { BsCalculationForm } from "../components/FormBuilder/Estimate/BsCalculationForm.tsx";
+  BsAddTechRate,
+  Input,
+  InputGroupText,
+} from "../components/CreateForm/EstimateForm";
+import { EstimateAddWorker, WorkerInput } from "../features/EstimateAddWorker";
 
-// interface AddTechRate {
-//     handleAddTechClick: (id: number) => void;
-//     handleRemoveTechClick: (id: number) => void;
-// }
+export function FormBuilder(): JSX.Element {
+  const { handleAddTechClick, handleRemoveTechClick, addTech }: WorkerInput =
+    EstimateAddWorker();
 
-interface InputId {
-  id: number;
-  text: string;
-}
-
-export function FormBuilder() {
-  const [addTech, setAddTech] = useState<InputId[]>([]);
-
-  const handleAddTechClick = () => {
-    setAddTech((originalTech) => [
-      ...originalTech,
-      {
-        id: originalTech.length + 1,
-        text: "Extra Tech in count $65",
-      },
-    ]);
-  };
-
-  const handleRemoveTechClick = (id: number) => {
-    const updatedTechList = addTech.filter((tech) => tech.id !== id);
-    setAddTech([...updatedTechList]);
-  };
   return (
     <div>
       <div>
@@ -52,7 +24,7 @@ export function FormBuilder() {
             >
               Estimate#
               {/*Invoice Input*/}
-              <BsInput
+              <Input
                 text=" "
                 ariaLabel="invoice Id"
                 style={{ width: "200px", height: "40px" }}
@@ -64,7 +36,7 @@ export function FormBuilder() {
             <InputGroup>
               <DropdownButton
                 variant="outline-primary"
-                title="Houry Rate"
+                title="Hourly Rate"
                 id="input-group-dropdown-1"
                 className="bg-primary"
                 style={{ width: "130px" }}
@@ -76,19 +48,19 @@ export function FormBuilder() {
               </DropdownButton>
 
               {/*Hourly rate Input*/}
-              <BsInput text="$65" ariaLabel="Technician an hour" />
+              <Input text="$65" ariaLabel="Technician an hour" />
 
               {/*Workload Text*/}
-              <BsInputGroupText text="Workload" ariaLabel="" className="ms-2" />
+              <InputGroupText text="Workload" ariaLabel="" className="ms-2" />
 
               {/*Workload Input */}
-              <BsInput
+              <Input
                 text="2 hours"
                 ariaLabel="Time required to complete the job"
               />
             </InputGroup>
             {addTech.map((tech) => (
-              <AddTechRate
+              <BsAddTechRate
                 key={tech.id}
                 handleRemoveTechClick={handleRemoveTechClick}
                 id={tech.id}
@@ -96,19 +68,16 @@ export function FormBuilder() {
             ))}
             {/*Amount Text */}
             <InputGroup className="mb-3 mt-3">
-              <BsInputGroupText text="$" />
+              <InputGroupText text="$" />
 
               {/*Amount Input*/}
-              <BsInput
-                text="Amount"
-                ariaLabel="Amount (to the nearest dollar)"
-              />
-              <BsInputGroupText text="Materials" />
+              <Input text="Amount" ariaLabel="Amount (to the nearest dollar)" />
+              <InputGroupText text="Materials" />
             </InputGroup>
 
             {/*Description Text*/}
             <InputGroup className="d-flex">
-              <BsInputGroupText text="Description" />
+              <InputGroupText text="Description" />
 
               {/*Description Input */}
               <Form.Control

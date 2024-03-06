@@ -1,7 +1,7 @@
 import Form from "react-bootstrap/Form";
-import { TextAreaProps } from "../../types/types.tsx";
+import { TextAreaProps } from "../../../types/types.tsx";
 import React from "react";
-export const BsInput: React.FC<TextAreaProps> = ({
+export const Input: React.FC<TextAreaProps> = ({
   text,
   ariaLabel,
   className,
