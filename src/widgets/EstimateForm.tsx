@@ -6,11 +6,11 @@ import {
   Input,
   InputGroupText,
 } from "../components/CreateForm/EstimateForm";
-import { EstimateAddWorker, WorkerInput } from "../features/EstimateAddWorker";
+import { AddWorker, AddWorkerProps } from "../features/AddWorker";
 
 export function FormBuilder(): JSX.Element {
-  const { handleAddTechClick, handleRemoveTechClick, addTech }: WorkerInput =
-    EstimateAddWorker();
+  const { handleAddTechClick, handleRemoveTechClick, addTech }: AddWorkerProps =
+    AddWorker();
 
   return (
     <div>

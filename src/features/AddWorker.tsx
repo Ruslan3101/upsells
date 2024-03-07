@@ -1,25 +1,23 @@
 import { useState } from "react";
 
-interface InputId {
+interface ExtraWorkerId {
   id: number;
-  text: string;
 }
 
-export interface WorkerInput {
+export interface AddWorkerProps {
   handleAddTechClick: () => void;
   handleRemoveTechClick: (id: number) => void;
-  addTech: InputId[];
+  addTech: ExtraWorkerId[];
 }
 
-export function EstimateAddWorker(): WorkerInput {
-  const [addTech, setAddTech] = useState<InputId[]>([]);
+export function AddWorker(): AddWorkerProps {
+  const [addTech, setAddTech] = useState<ExtraWorkerId[]>([]);
 
   const handleAddTechClick = () => {
-    setAddTech((originalTech) => [
-      ...originalTech,
+    setAddTech((currentTech) => [
+      ...currentTech,
       {
-        id: originalTech.length + 1,
-        text: "Extra Tech in count $65",
+        id: currentTech.length + 1,
       },
     ]);
   };
