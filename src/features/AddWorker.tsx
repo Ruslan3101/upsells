@@ -23,8 +23,9 @@ export function AddWorker(): AddWorkerProps {
   };
 
   const handleRemoveTechClick = (id: number) => {
-    const updatedTechList = addTech.filter((tech) => tech.id !== id);
-    setAddTech([...updatedTechList]);
+    setAddTech((currentTech) => {
+      return currentTech.filter((tech) => tech.id !== id);
+    });
   };
 
   return {

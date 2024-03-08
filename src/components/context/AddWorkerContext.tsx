@@ -1,17 +1,20 @@
-import { FC, createContext, useContext, useState } from "react";
+import { FC, ReactNode, createContext, useContext, useState } from "react";
 
+export interface AddWorkerProps{
+  children: ReactNode
+
+}
 interface ExtraWorker {
   id: number;
-  // text: string;
 }
 
-export interface AddWorkerProps {
+export interface AddWorkerContext {
   handleAddTechClick: () => void;
   handleRemoveTechClick: (id: number) => void;
   addTech: ExtraWorker[];
 }
 
-export const AddWorkerContext = createContext<AddWorkerProps>({});
+export const AddWorkerContext = createContext({} as AddWorkerContext);
 
 export function useAddWorker() {
   return useContext(AddWorkerContext);
@@ -25,14 +28,14 @@ export function AddWorkerProvider({ children }: AddWorkerProps) {
       ...originalTech,
       {
         id: originalTech.length + 1,
-        //   text: "Extra Tech in count $65",
-      },
+        },
     ]);
   };
 
   const handleRemoveTechClick = (id: number) => {
-    const updatedTechList = addTech.filter((tech) => tech.id !== id);
-    setAddTech([...updatedTechList]);
+    setAddTech((currentTech) => {
+      return currentTech.filter((tech) => tech.id !== id);
+    });
   };
 
   return;
