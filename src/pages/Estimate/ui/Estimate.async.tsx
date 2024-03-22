@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 // @ts-ignore
 
-export const EstimateAsync = React.lazy(() => import('./Estimate'));
+export const EstimateAsync = React.lazy(() => import("./Estimate"));

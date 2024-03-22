@@ -1,8 +1,7 @@
 import { FC, ReactNode, createContext, useContext, useState } from "react";
 
-export interface AddWorkerProps{
-  children: ReactNode
-
+export interface AddWorkerProps {
+  children: ReactNode;
 }
 interface ExtraWorker {
   id: number;
@@ -28,7 +27,7 @@ export function AddWorkerProvider({ children }: AddWorkerProps) {
       ...originalTech,
       {
         id: originalTech.length + 1,
-        },
+      },
     ]);
   };
 
@@ -38,14 +37,15 @@ export function AddWorkerProvider({ children }: AddWorkerProps) {
     });
   };
 
-  return;
-  <AddWorkerContext.Provider
-    value={{
-      handleAddTechClick,
-      handleRemoveTechClick,
-      addTech,
-    }}
-  >
-    {children}
-  </AddWorkerContext.Provider>;
+  return (
+    <AddWorkerContext.Provider
+      value={{
+        handleAddTechClick,
+        handleRemoveTechClick,
+        addTech,
+      }}
+    >
+      {children}
+    </AddWorkerContext.Provider>
+  );
 }

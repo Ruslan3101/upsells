@@ -1,11 +1,14 @@
 import Form from "react-bootstrap/Form";
-import { TextAreaProps } from "../../../types/types.tsx";
+import { InputProps } from "../../../types/types.tsx";
 import React from "react";
-export const Input: React.FC<TextAreaProps> = ({
+export const Input: React.FC<InputProps> = ({
   text,
   ariaLabel,
   className,
   style,
+  value,
+  // onChange,
+
 }) => {
   return (
     <Form.Control
@@ -13,6 +16,8 @@ export const Input: React.FC<TextAreaProps> = ({
       aria-label={ariaLabel}
       className={className}
       style={style}
+      value={value}
+      // onChange={onChange} 
     />
   );
 };
