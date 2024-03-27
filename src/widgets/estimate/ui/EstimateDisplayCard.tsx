@@ -7,7 +7,7 @@ export type Tabs = {
   activeTab: string;
 };
 
-export function SellsPriceCard() {
+export function EstimateDisplayCard() {
   const [activeTab, setActiveTab] = useState<Tabs>({ activeTab: "customer" });
 
   const handleTabChange = (tab: string) => {

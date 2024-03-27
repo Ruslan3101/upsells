@@ -3,11 +3,11 @@ import { Card, Nav } from "react-bootstrap";
 
 import { Estimate } from "../../../components/types/types";
 
-export function EstimateOverview() {
+export function CustomerOverview() {
   const { estimate, toggle, toggleHandler } = useAddEstimate();
   return (
     <div>
-      {estimate.map((calculatedEstimate: Estimate) => (
+      {estimate.map((calculatedEstimate) => (
         <div key={calculatedEstimate.id}>
           <Card.Title className="fs-2">
             Total: {`$${calculatedEstimate.selling_price}`}

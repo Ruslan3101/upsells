@@ -1,17 +1,17 @@
 import { Card } from "react-bootstrap";
 import {
-  EstimateOverview,
+  CustomerOverview,
   ProOverview,
   SettingsOverview,
 } from "../model/index";
 
 export function CustomerCard({ activeTab }) {
   const overviewCard = () => {
-    if (activeTab === " customer") {
-      return <EstimateOverview />;
+    if (activeTab === "customer") {
+      return <CustomerOverview />;
     } else if (activeTab === "pro") {
       return <ProOverview />;
-    } else if (activeTab === "pro") {
+    } else if (activeTab === "settings") {
       return <SettingsOverview />;
     }
   };
