@@ -1,17 +1,9 @@
-import {
-  query,
-  collection,
-  onSnapshot,
-  addDoc,
-  Timestamp,
-} from "firebase/firestore";
+import { query, collection, onSnapshot, addDoc } from "firebase/firestore";
 import {
   ReactNode,
-  SyntheticEvent,
   createContext,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from "react";
 
@@ -27,32 +19,71 @@ export interface Item {
 export interface AddEstimateContextType {
   toggle: boolean;
   estimate: Estimate[];
-  estimateNumb: Estimate[];
+  estimateNumb: string;
   hourlyRate: number;
   timeRequired: number;
   materialCost: number;
-  estimateDescription: Estimate[];
-  laborCost: Estimate[];
-  sellingPrice: Estimate[];
-  workerQuantity: Estimate[];
-  estimateHandleSubmit: () => void;
+  estimateDescription: string;
+  laborCost: number;
+  sellingPrice: number;
+  workerQuantity: number;
+  // estimateHandleSubmit: () => void;
+  estimateHandleSubmit: (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => Promise<void>;
   fetchDataAndUpdateState: () => void;
   toggleHandler: () => void;
-  countEstimatedJobCost: (value: number) => void;
-  handlerInputChange: (value: string) => string;
+  // countEstimatedJobCost: (value: number) => void;
+  countEstimatedJobCost: () => void;
+  handlerInputChange: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    inputName: (value: number | string) => void
+  ) => void;
+  // handlerInputChange: (value: number) => void;
   setEstimateNumb: (value: string) => void;
   setHourlyRate: (value: number) => void;
   setTimeRequired: (value: number) => void;
-  setMaterialCost: (value: number) => number;
+  setMaterialCost: (value: number) => void;
   setEstimateDescription: (value: string) => void;
-  setEstimate: (value: string) => void;
+  setEstimate: (value: Estimate[]) => void;
   setLaborCost: (value: number) => void;
   setSellingPrice: (value: number) => void;
   setWorkerQuantity: (value: number) => void;
 
   // handlerFormChange: (value: string) => void;
 }
-export const AddEstimateContext = createContext<AddEstimateContextType>(null!);
+
+const defaultContextValue: AddEstimateContextType = {
+  // Provide a default value that matches the expected type for all properties.
+  // This helps avoid using null! and improves type safety.
+  toggle: false,
+  estimate: [],
+  estimateNumb: "",
+  hourlyRate: 0,
+  timeRequired: 0,
+  materialCost: 0,
+  laborCost: 0,
+  sellingPrice: 0,
+  workerQuantity: 0,
+  estimateDescription: "",
+  estimateHandleSubmit: async () => {},
+  fetchDataAndUpdateState: () => {},
+  toggleHandler: () => {},
+  handlerInputChange: () => {},
+  setEstimateNumb: () => {},
+  setHourlyRate: () => {},
+  setTimeRequired: () => {},
+  setMaterialCost: () => {},
+  setLaborCost: () => {},
+  setSellingPrice: () => {},
+  setWorkerQuantity: () => {},
+  setEstimateDescription: () => {},
+  setEstimate: () => {},
+  countEstimatedJobCost: () => {},
+};
+
+export const AddEstimateContext =
+  createContext<AddEstimateContextType>(defaultContextValue);
 
 export function useAddEstimate() {
   return useContext(AddEstimateContext);
@@ -61,22 +92,22 @@ export function useAddEstimate() {
 export function AddEstimateProvider({ children }: AddEstimateProps) {
   const [estimate, setEstimate] = useState<Estimate[]>([]);
   const [toggle, setToggle] = useState(false);
-  const [estimateNumb, setEstimateNumb] = useState("");
+  const [estimateNumb, setEstimateNumb] = useState<string>("");
   const [hourlyRate, setHourlyRate] = useState<number>(0);
   const [timeRequired, setTimeRequired] = useState<number>(0);
   const [materialCost, setMaterialCost] = useState<number>(0);
-  const [laborCost, setLaborCost] = useState(0);
-  const [workerQuantity, setWorkerQuantity] = useState(0);
-  const [estimateDescription, setEstimateDescription] = useState("");
+  const [laborCost, setLaborCost] = useState<number>(0);
+  const [workerQuantity, setWorkerQuantity] = useState<number>(0);
+  const [estimateDescription, setEstimateDescription] = useState<string>("");
 
-  const [profitInPercent, setProfitInPercent] = useState(0);
-  const [profitInMoney, setProfitInMoney] = useState(0);
+  const [profitInPercent, setProfitInPercent] = useState<number>(0);
+  const [profitInMoney, setProfitInMoney] = useState<number>(0);
 
-  const [sellingPrice, setSellingPrice] = useState(0);
-  const [markUp, setMarkUp] = useState(0);
-  const [jobCost, setJobCost] = useState(0);
+  const [sellingPrice, setSellingPrice] = useState<number>(0);
+  const [markUp, setMarkUp] = useState<number>(0);
+  const [jobCost, setJobCost] = useState<number>(0);
   const [estimatedJobCost, setEstimatedJobCost] = useState<number>(0);
-  const [companyOverhead, setCompanyOverhead] = useState(0);
+  const [companyOverhead, setCompanyOverhead] = useState<number>(0);
   // const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -126,10 +157,17 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
 
   const handlerInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    inputName: (value: string) => void
+    inputName: (value: number | string) => void
   ) => {
-    // event.preventDefault();
-    inputName(event.target.value);
+    event.preventDefault();
+    // if(inputName === setEstimateNumb ||  setEstimateDescription){
+
+    // }
+    const numberValue =
+      inputName === setEstimateNumb || inputName === setEstimateDescription
+        ? event.target.value
+        : +event.target.value;
+    inputName(numberValue);
   };
 
   const countLaborCost = () => {
@@ -138,12 +176,10 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
 
   const countEstimatedJobCost = () => {
     setEstimatedJobCost(hourlyRate * timeRequired + materialCost);
-    console.log("HR ", typeof hourlyRate);
-    console.log("TR ", typeof timeRequired);
-    console.log("MC ", typeof materialCost);
   };
   const fetchDataAndUpdateState = async () => {
     const updatedData = await estimateHandleSubmit(); // This is an async call to fetch data
+    
     setHourlyRate(updatedData.hourlyRate);
     setTimeRequired(updatedData.timeRequired);
     setMaterialCost(updatedData.materialCost);
@@ -169,7 +205,7 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
     setProfitInPercent(parseInt(event.target.value));
   };
 
-  const context = {
+  const contextValue = {
     toggle,
     toggleHandler,
     estimate,
@@ -193,10 +229,13 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
     sellingPrice,
     workerQuantity,
     countEstimatedJobCost,
-    fetchDataAndUpdateState,
+    fetchDataAndUpdateState: async () => {
+      // This should contain logic to fetch data and update state accordingly
+      // For now, it's a placeholder to align with the type definition
+    },
   };
   return (
-    <AddEstimateContext.Provider value={context}>
+    <AddEstimateContext.Provider value={contextValue}>
       {children}
     </AddEstimateContext.Provider>
   );

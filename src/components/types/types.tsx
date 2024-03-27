@@ -1,5 +1,4 @@
 export type Estimate = {
-
   labor_cost: number;
   estimateNumber: string;
   date: string;
@@ -29,8 +28,7 @@ export type InputProps = {
   style?: Partial<{
     width: string;
     height: string;
-  }
-  >;
+  }>;
   value: string;
-  onChange: () => void
+  onChange: () => void;
 };
