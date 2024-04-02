@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Card, Nav } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
-import { CustomerCard } from "./CustomerCard";
+import { SellsPriceCard } from "./SellsPriceCard";
 
 export type Tabs = {
   activeTab: string;
@@ -13,7 +13,6 @@ export function EstimateDisplayCard() {
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
-  console.log(activeTab);
 
   return (
     <div>
@@ -48,7 +47,7 @@ export function EstimateDisplayCard() {
         </Card.Header>
         <Card.Body>
           {/* {activeTab === "customer" && <CustomerCard  activeTab={activeTab}/>} */}
-          {<CustomerCard activeTab={activeTab} />}
+          {<SellsPriceCard activeTab={activeTab} />}
 
           <div
             style={{

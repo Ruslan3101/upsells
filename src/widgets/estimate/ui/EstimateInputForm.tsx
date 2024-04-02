@@ -23,17 +23,12 @@ export function EstimateInputForm(): JSX.Element {
   const {
     estimateNumb,
     setEstimateNumb,
-    estimateHandleSubmit,
+    estimateHandlerSubmit,
     handlerInputChange,
     setHourlyRate,
     setEstimateDescription,
     setMaterialCost,
     setTimeRequired,
-    hourlyRate,
-    timeRequired,
-    materialCost,
-    inputRef,
-    countEstimatedJobCost,
     fetchDataAndUpdateState,
   } = useAddEstimate();
   const { handleAddTechClick, handleRemoveTechClick, addTech } = useAddWorker();
@@ -59,7 +54,6 @@ export function EstimateInputForm(): JSX.Element {
               }
               className="ms-2"
             />
-            {/* {console.log(estimateNumb)} */}
           </Form.Label>
 
           {/*Hourly Rate Dropdown*/}
@@ -143,8 +137,8 @@ export function EstimateInputForm(): JSX.Element {
             variant="primary"
             onClick={(event) => {
               // event.preventDefault();
-              estimateHandleSubmit(event);
-              fetchDataAndUpdateState;
+              estimateHandlerSubmit(event);
+              // fetchDataAndUpdateState();
             }}
           >
             Calculate

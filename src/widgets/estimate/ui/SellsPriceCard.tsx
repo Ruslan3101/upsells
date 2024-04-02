@@ -5,7 +5,7 @@ import {
   SettingsOverview,
 } from "../model/index";
 
-export function CustomerCard({ activeTab }) {
+export function SellsPriceCard({ activeTab }) {
   const overviewCard = () => {
     if (activeTab === "customer") {
       return <CustomerOverview />;

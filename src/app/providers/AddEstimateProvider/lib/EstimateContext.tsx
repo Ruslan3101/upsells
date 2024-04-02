@@ -1,4 +1,13 @@
-import { query, collection, onSnapshot, addDoc } from "firebase/firestore";
+import {
+  query,
+  collection,
+  onSnapshot,
+  addDoc,
+  doc,
+  updateDoc,
+  getDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import {
   ReactNode,
   createContext,
@@ -6,9 +15,11 @@ import {
   useEffect,
   useState,
 } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import { Estimate } from "components/types/types";
 import db from "../../../../shared/api/firebase/connectDB";
+import { useGetData } from "../../../../shared/api/firebase/useGetData";
 
 export interface AddEstimateProps {
   children: ReactNode;
@@ -18,6 +29,8 @@ export interface Item {
 }
 export interface AddEstimateContextType {
   toggle: boolean;
+  estimateId: string;
+  isButtonDisabled: boolean;
   estimate: Estimate[];
   estimateNumb: string;
   hourlyRate: number;
@@ -27,19 +40,23 @@ export interface AddEstimateContextType {
   laborCost: number;
   sellingPrice: number;
   workerQuantity: number;
-  // estimateHandleSubmit: () => void;
-  estimateHandleSubmit: (
+  salesTax: number;
+  profitInPercent: number;
+  accountingSettings: number;
+  companyOverhead: number;
+  estimateHandlerSubmit: (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => Promise<void>;
+  AccountingSettingsHandlerSubmit: (
     event: React.ChangeEvent<HTMLInputElement>
   ) => Promise<void>;
   fetchDataAndUpdateState: () => void;
   toggleHandler: () => void;
-  // countEstimatedJobCost: (value: number) => void;
   countEstimatedJobCost: () => void;
   handlerInputChange: (
     event: React.ChangeEvent<HTMLInputElement>,
     inputName: (value: number | string) => void
   ) => void;
-  // handlerInputChange: (value: number) => void;
   setEstimateNumb: (value: string) => void;
   setHourlyRate: (value: number) => void;
   setTimeRequired: (value: number) => void;
@@ -49,6 +66,10 @@ export interface AddEstimateContextType {
   setLaborCost: (value: number) => void;
   setSellingPrice: (value: number) => void;
   setWorkerQuantity: (value: number) => void;
+  setProfitInPercent: (value: number) => void;
+  setCompanyOverhead: (value: number) => void;
+  setSalesTax: (value: number) => void;
+  displayCustomerCard(key: string): string;
 
   // handlerFormChange: (value: string) => void;
 }
@@ -57,6 +78,7 @@ const defaultContextValue: AddEstimateContextType = {
   // Provide a default value that matches the expected type for all properties.
   // This helps avoid using null! and improves type safety.
   toggle: false,
+  isButtonDisabled: false,
   estimate: [],
   estimateNumb: "",
   hourlyRate: 0,
@@ -65,8 +87,11 @@ const defaultContextValue: AddEstimateContextType = {
   laborCost: 0,
   sellingPrice: 0,
   workerQuantity: 0,
+  salesTax: 0,
   estimateDescription: "",
-  estimateHandleSubmit: async () => {},
+
+  estimateHandlerSubmit: async () => {},
+  AccountingSettingsHandlerSubmit: async () => {},
   fetchDataAndUpdateState: () => {},
   toggleHandler: () => {},
   handlerInputChange: () => {},
@@ -79,6 +104,9 @@ const defaultContextValue: AddEstimateContextType = {
   setWorkerQuantity: () => {},
   setEstimateDescription: () => {},
   setEstimate: () => {},
+  setProfitInPercent: () => {},
+  setCompanyOverhead: () => {},
+  setSalesTax: () => {},
   countEstimatedJobCost: () => {},
 };
 
@@ -90,9 +118,11 @@ export function useAddEstimate() {
 }
 
 export function AddEstimateProvider({ children }: AddEstimateProps) {
-  const [estimate, setEstimate] = useState<Estimate[]>([]);
   const [toggle, setToggle] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
   const [estimateNumb, setEstimateNumb] = useState<string>("");
+  const [estimateId, setEstimateId] = useState<string>("");
   const [hourlyRate, setHourlyRate] = useState<number>(0);
   const [timeRequired, setTimeRequired] = useState<number>(0);
   const [materialCost, setMaterialCost] = useState<number>(0);
@@ -102,33 +132,32 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
 
   const [profitInPercent, setProfitInPercent] = useState<number>(0);
   const [profitInMoney, setProfitInMoney] = useState<number>(0);
+  const [salesTax, setSalesTax] = useState<number>(0);
 
   const [sellingPrice, setSellingPrice] = useState<number>(0);
   const [markUp, setMarkUp] = useState<number>(0);
   const [jobCost, setJobCost] = useState<number>(0);
   const [estimatedJobCost, setEstimatedJobCost] = useState<number>(0);
   const [companyOverhead, setCompanyOverhead] = useState<number>(0);
-  // const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const getCustomerEstimate = async () => {
-      const estimateColRef = query(collection(db, "estimate"));
-      onSnapshot(estimateColRef, (estimateSnapshot) => {
-        const newEstimate = estimateSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Estimate[];
-        setEstimate(newEstimate);
-      });
-    };
-    getCustomerEstimate();
-  }, []);
+  // Custom Hooks
+  // const [estimate, setEstimate] = useState(); // Displaying Estimates Custom Hook
+  const [estimate, setEstimate] = useGetData("estimate"); // Displaying Estimates Custom Hook
+  const [accountingSettings, setAccountingSettings] =
+    useGetData("company_settings"); // Displaying Accounting Settings Custom Hook
 
   const toggleHandler = () => {
     setToggle(!toggle);
   };
+  console.log(markUp, companyOverhead, salesTax);
+  console.log(accountingSettings.map((data) => data.id));
+  // console.log((accountingSettings as Estimate[])[0].overhead);
 
-  const estimateHandleSubmit = async (
+  const getProfileId = (): string => {
+    return (accountingSettings as Estimate[])[0].id;
+  };
+
+  const estimateHandlerSubmit = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     event.preventDefault();
@@ -139,19 +168,63 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
         time_required: +timeRequired || null,
         material_cost: +materialCost || null,
         estimate_description: estimateDescription || null,
-        // labor_cost: countLaborCost,
         estimated_job_cost: +estimatedJobCost || null,
       });
-      // console.log({
-      //   estimate_number: estimateNumb,
-      //   hourly_rate: hourlyRate,
-      //   time_required: timeRequired,
-      //   material_cost: materialCost,
-      //   estimate_description: estimateDescription,
-      // });
+      setEstimateId(docRef.id);
       console.log("Document written with ID: ", docRef.id);
     } catch (event) {
       console.error("Error adding document: ", event);
+    }
+  };
+  function displayCustomerCard(sellsPrice, laborCost, materialCost) {}
+  // const fetchAndProcessDocument = async () => {
+
+  //   try {
+  //     const docRef = doc(db, "estimate", estimateId);
+  //   const docSnap = await getDoc(docRef);
+  //   if (docSnap.exists()) {
+  //       const data = docSnap.data()
+  //       const sellsPrice = data.sells_price;
+  //       const laborCost = data.labor_cost;
+  //       const materialCost = data.material_cost;
+
+  //       } else {
+  //         console.log("No such document!");
+  //       }
+  //     }
+  //     catch (error) {
+  //       console.error("Error fetching document: ", error);
+  //     }
+
+  // }
+
+  // Creating Accounting Settings in DB
+  const AccountingSettingsHandlerSubmit = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    event.preventDefault();
+    try {
+      const docRef = doc(db, "company_settings", getProfileId());
+      await updateDoc(docRef, {
+        overhead: companyOverhead,
+        profit_in_percent: profitInPercent,
+        sales_tax: salesTax,
+        lastUpdated: serverTimestamp()
+      });
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setSalesTax(data.sales_tax);
+        setProfitInPercent(data.profit_in_percent);
+        setCompanyOverhead(data.overhead);
+        console.log(docSnap.data());
+      } else {
+        console.log("No such document!");
+      }
+    } catch (error) {
+      console.error("Error fetching document: ", error);
+    } finally {
+      setIsButtonDisabled(true);
     }
   };
 
@@ -160,56 +233,58 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
     inputName: (value: number | string) => void
   ) => {
     event.preventDefault();
-    // if(inputName === setEstimateNumb ||  setEstimateDescription){
-
-    // }
     const numberValue =
       inputName === setEstimateNumb || inputName === setEstimateDescription
         ? event.target.value
         : +event.target.value;
     inputName(numberValue);
+    setIsButtonDisabled(false);
   };
 
   const countLaborCost = () => {
-    setLaborCost(sellingPrice - materialCost);
+    // setLaborCost(sellingPrice - materialCost);
   };
 
   const countEstimatedJobCost = () => {
     setEstimatedJobCost(hourlyRate * timeRequired + materialCost);
-  };
-  const fetchDataAndUpdateState = async () => {
-    const updatedData = await estimateHandleSubmit(); // This is an async call to fetch data
-    
-    setHourlyRate(updatedData.hourlyRate);
-    setTimeRequired(updatedData.timeRequired);
-    setMaterialCost(updatedData.materialCost);
+    setLaborCost(sellingPrice - materialCost);
+    setMarkUp(companyOverhead + profitInPercent);
+    setJobCost(100 % -markUp);
+    setProfitInMoney(sellingPrice * profitInPercent);
+
+
+
   };
 
   useEffect(() => {
     countEstimatedJobCost();
   }, [hourlyRate, timeRequired, materialCost, estimatedJobCost]);
 
-  const countJobCost = () => {
-    setJobCost(100 % -markUp);
-  };
+  // const countJobCost = () => {
+  //   setJobCost(100 % -markUp);
+  // };
 
-  const countMarkUp = () => {
-    setMarkUp(companyOverhead + profitInPercent);
-  };
+  // const countMarkUp = () => {
+  //   setMarkUp(companyOverhead + profitInPercent);
+  // };
 
-  const countProfitInMoney = () => {
-    setProfitInMoney(sellingPrice * profitInPercent);
-  };
+  // const countProfitInMoney = () => {
+  //   setProfitInMoney(sellingPrice * profitInPercent);
+  // };
 
-  const AddProfitPercent = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setProfitInPercent(parseInt(event.target.value));
-  };
+  // const AddProfitPercent = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setProfitInPercent(parseInt(event.target.value));
+  // };
 
   const contextValue = {
     toggle,
+    estimateId,
     toggleHandler,
     estimate,
-    estimateHandleSubmit,
+    salesTax,
+    profitInPercent,
+    companyOverhead,
+    estimateHandlerSubmit,
     estimateNumb,
     setEstimateNumb,
     handlerInputChange,
@@ -217,6 +292,9 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
     setTimeRequired,
     setMaterialCost,
     setEstimateDescription,
+    setProfitInPercent,
+    setCompanyOverhead,
+    setSalesTax,
     hourlyRate,
     timeRequired,
     materialCost,
@@ -229,10 +307,15 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
     sellingPrice,
     workerQuantity,
     countEstimatedJobCost,
-    fetchDataAndUpdateState: async () => {
-      // This should contain logic to fetch data and update state accordingly
-      // For now, it's a placeholder to align with the type definition
-    },
+    isButtonDisabled,
+    accountingSettings,
+    // fetchDataAndUpdateState,
+    AccountingSettingsHandlerSubmit,
+    displayCustomerCard,
+    // : async () => {
+    //   // This should contain logic to fetch data and update state accordingly
+    //   // For now, it's a placeholder to align with the type definition
+    // },
   };
   return (
     <AddEstimateContext.Provider value={contextValue}>

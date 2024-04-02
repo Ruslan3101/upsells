@@ -10,12 +10,12 @@ import { AddWorkerProvider } from "../app/providers/AddWorkerProvider/AddWorkerC
 import { AddEstimateProvider } from "../app/providers/AddEstimateProvider/lib/EstimateContext";
 import { Loader } from "../shared/ui";
 import { EstimateAsync } from "../pages/Estimate/ui/Estimate.async";
-import { AdminPanelAsync } from "../pages/AdminPanel/ui/AdminPanel.async";
+import { SettingsAsync } from "../pages/AdminPanel/ui/Settings.async";
 import { HistoryAsync } from "../pages/History/ui/History.async";
 import { ReportsAsync } from "../pages/Reports/ui/Reports.async";
 import { ErrorBoundary } from "../app/ErrorBoundary/ErrorBoundary";
 import { Estimate } from "../pages/Estimate/ui/Estimate";
-import { AdminPanel } from "../pages/AdminPanel/ui/AdminPanel";
+import { Settings } from "../pages/AdminPanel/ui/Settings";
 import { Reports } from "../pages/Reports/ui/Reports";
 import { History } from "../pages/History/ui/History";
 
@@ -39,7 +39,7 @@ function App() {
 
               <Route path="/history" element={<History />} />
               <Route path="/reports" element={<Reports />} />
-              <Route path="/admin" element={<AdminPanel />} />
+              <Route path="/admin-settings" element={<Settings />} />
             </Routes>
             {/* </ErrorBoundary> */}
           </Suspense>

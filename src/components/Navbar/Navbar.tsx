@@ -16,7 +16,7 @@ export function Navbar() {
           <Nav.Link to="/reports" as={NavLink}>
             Reports
           </Nav.Link>
-          <Nav.Link to="/admin" as={NavLink}>
+          <Nav.Link to="/admin-settings" as={NavLink}>
             Settings
           </Nav.Link>
         </Nav>

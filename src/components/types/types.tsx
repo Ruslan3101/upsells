@@ -9,9 +9,9 @@ export type Estimate = {
   salesTax: number;
   profitInPercent: number;
   overhead: number;
-  sellingPrice: number;
+  selling_price: number;
   laborCost: number;
-  materialCost: number;
+  material_cost: number;
   estimateDescription: string;
   id: string;
 };
