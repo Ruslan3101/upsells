@@ -7,6 +7,7 @@ import {
   updateDoc,
   getDoc,
   serverTimestamp,
+  Timestamp,
 } from "firebase/firestore";
 import {
   ReactNode,
@@ -126,8 +127,9 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
   const [hourlyRate, setHourlyRate] = useState<number>(0);
   const [timeRequired, setTimeRequired] = useState<number>(0);
   const [materialCost, setMaterialCost] = useState<number>(0);
+  const [materialTaxAmount, setMaterialTaxAmount] = useState<number>(0);
   const [laborCost, setLaborCost] = useState<number>(0);
-  const [workerQuantity, setWorkerQuantity] = useState<number>(0);
+  const [workerQuantity, setWorkerQuantity] = useState<number>(1);
   const [estimateDescription, setEstimateDescription] = useState<string>("");
 
   const [profitInPercent, setProfitInPercent] = useState<number>(0);
@@ -139,22 +141,19 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
   const [jobCost, setJobCost] = useState<number>(0);
   const [estimatedJobCost, setEstimatedJobCost] = useState<number>(0);
   const [companyOverhead, setCompanyOverhead] = useState<number>(0);
+  const [settingsInitialState, setSettingsInitialState] = useState({
+    companyOverhead: 0,
+    profitInPercent: 0,
+    salesTax: 0,
+  });
 
   // Custom Hooks
-  // const [estimate, setEstimate] = useState(); // Displaying Estimates Custom Hook
   const [estimate, setEstimate] = useGetData("estimate"); // Displaying Estimates Custom Hook
   const [accountingSettings, setAccountingSettings] =
     useGetData("company_settings"); // Displaying Accounting Settings Custom Hook
 
   const toggleHandler = () => {
     setToggle(!toggle);
-  };
-  console.log(markUp, companyOverhead, salesTax);
-  console.log(accountingSettings.map((data) => data.id));
-  // console.log((accountingSettings as Estimate[])[0].overhead);
-
-  const getProfileId = (): string => {
-    return (accountingSettings as Estimate[])[0].id;
   };
 
   const estimateHandlerSubmit = async (
@@ -169,6 +168,14 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
         material_cost: +materialCost || null,
         estimate_description: estimateDescription || null,
         estimated_job_cost: +estimatedJobCost || null,
+        labor_cost: +laborCost,
+        selling_price: sellingPrice,
+        worker_quantity: workerQuantity,
+        mark_up: markUp,
+        job_cost: jobCost,
+        sales_tax: salesTax,
+        material_tax_amount: materialTaxAmount,
+        date: serverTimestamp(),
       });
       setEstimateId(docRef.id);
       console.log("Document written with ID: ", docRef.id);
@@ -176,55 +183,86 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
       console.error("Error adding document: ", event);
     }
   };
-  function displayCustomerCard(sellsPrice, laborCost, materialCost) {}
-  // const fetchAndProcessDocument = async () => {
 
-  //   try {
-  //     const docRef = doc(db, "estimate", estimateId);
-  //   const docSnap = await getDoc(docRef);
-  //   if (docSnap.exists()) {
-  //       const data = docSnap.data()
-  //       const sellsPrice = data.sells_price;
-  //       const laborCost = data.labor_cost;
-  //       const materialCost = data.material_cost;
+  const getProfileId = (): string | undefined => {
+    if (Array.isArray(accountingSettings) && accountingSettings.length > 0) {
+      return accountingSettings[0].id;
+    } else return undefined;
+  };
 
-  //       } else {
-  //         console.log("No such document!");
-  //       }
-  //     }
-  //     catch (error) {
-  //       console.error("Error fetching document: ", error);
-  //     }
+  const profileId = getProfileId();
 
-  // }
+  useEffect(() => {
+    const fetchData = async () => {
+      if (profileId !== undefined) {
+        const docRef = doc(db, "company_settings", profileId);
+        try {
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setSettingsInitialState({
+              companyOverhead: Number(data.overhead),
+              profitInPercent: Number(data.profit_in_percent),
+              salesTax: Number(data.sales_tax),
+            });
+            setCompanyOverhead(Number(data.overhead));
+            setProfitInPercent(Number(data.profit_in_percent));
+            setSalesTax(Number(data.sales_tax));
+          } else {
+            console.log("No such document!");
+          }
+        } catch (error) {
+          console.error("Error fetching document: ", error);
+        }
+      }
+    };
+    fetchData();
+  }, [profileId]);
+
+  const hasChanged = () => {
+    return (
+      companyOverhead !== settingsInitialState.companyOverhead ||
+      profitInPercent !== settingsInitialState.profitInPercent ||
+      salesTax !== settingsInitialState.salesTax
+    );
+  };
 
   // Creating Accounting Settings in DB
   const AccountingSettingsHandlerSubmit = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     event.preventDefault();
-    try {
-      const docRef = doc(db, "company_settings", getProfileId());
-      await updateDoc(docRef, {
-        overhead: companyOverhead,
-        profit_in_percent: profitInPercent,
-        sales_tax: salesTax,
-        lastUpdated: serverTimestamp()
-      });
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        setSalesTax(data.sales_tax);
-        setProfitInPercent(data.profit_in_percent);
-        setCompanyOverhead(data.overhead);
-        console.log(docSnap.data());
-      } else {
-        console.log("No such document!");
+    if (!hasChanged()) {
+      console.log("No Changes to Update");
+      return;
+    }
+    const updateObject = {};
+    if (companyOverhead !== settingsInitialState.companyOverhead)
+      updateObject.overhead = companyOverhead;
+    if (profitInPercent !== settingsInitialState.profitInPercent)
+      updateObject.profit_in_percent = profitInPercent;
+    if (salesTax !== settingsInitialState.salesTax)
+      updateObject.sales_tax = salesTax;
+    updateObject.lastUpdated = serverTimestamp();
+
+    setIsButtonDisabled(true);
+    if (profileId !== undefined) {
+      // Correctly use profileId as the argument to doc()
+      const docRef = doc(db, "company_settings", profileId);
+
+      try {
+        await updateDoc(docRef, updateObject);
+        console.log("Document updated Successfully");
+        setSettingsInitialState({
+          companyOverhead: companyOverhead,
+          profitInPercent: profitInPercent,
+          salesTax: salesTax,
+        });
+      } catch (error) {
+        console.error("Error fetching document: ", error);
+      } finally {
+        setIsButtonDisabled(false);
       }
-    } catch (error) {
-      console.error("Error fetching document: ", error);
-    } finally {
-      setIsButtonDisabled(true);
     }
   };
 
@@ -241,40 +279,30 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
     setIsButtonDisabled(false);
   };
 
-  const countLaborCost = () => {
-    // setLaborCost(sellingPrice - materialCost);
-  };
-
   const countEstimatedJobCost = () => {
-    setEstimatedJobCost(hourlyRate * timeRequired + materialCost);
-    setLaborCost(sellingPrice - materialCost);
+    accountingSettings.map((data) => {
+      setCompanyOverhead(data.overhead);
+      setProfitInPercent(data.profit_in_percent);
+      setSalesTax(data.sales_tax);
+    });
+    setMaterialTaxAmount(materialCost * (salesTax / 100));
+
+    setEstimatedJobCost(
+      hourlyRate * timeRequired + materialCost + materialTaxAmount
+    );
+
+    setLaborCost(Math.ceil(sellingPrice - materialTaxAmount));
     setMarkUp(companyOverhead + profitInPercent);
-    setJobCost(100 % -markUp);
+    setJobCost(100 - markUp);
     setProfitInMoney(sellingPrice * profitInPercent);
-
-
-
+    setSellingPrice(
+      parseFloat((estimatedJobCost / (jobCost / 100)).toFixed(2))
+    );
   };
 
   useEffect(() => {
     countEstimatedJobCost();
   }, [hourlyRate, timeRequired, materialCost, estimatedJobCost]);
-
-  // const countJobCost = () => {
-  //   setJobCost(100 % -markUp);
-  // };
-
-  // const countMarkUp = () => {
-  //   setMarkUp(companyOverhead + profitInPercent);
-  // };
-
-  // const countProfitInMoney = () => {
-  //   setProfitInMoney(sellingPrice * profitInPercent);
-  // };
-
-  // const AddProfitPercent = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setProfitInPercent(parseInt(event.target.value));
-  // };
 
   const contextValue = {
     toggle,
@@ -309,13 +337,7 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
     countEstimatedJobCost,
     isButtonDisabled,
     accountingSettings,
-    // fetchDataAndUpdateState,
     AccountingSettingsHandlerSubmit,
-    displayCustomerCard,
-    // : async () => {
-    //   // This should contain logic to fetch data and update state accordingly
-    //   // For now, it's a placeholder to align with the type definition
-    // },
   };
   return (
     <AddEstimateContext.Provider value={contextValue}>
