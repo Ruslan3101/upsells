@@ -20,16 +20,16 @@ npm (v6.x or higher) or Yarn (v1.22.x or higher)
 
 1. ### Clone the repository
 
-`shell git clone https://github.com/yourusername/upSells-v1.git`
+` git clone https://github.com/yourusername/upSells-v1.git`
 
 2. ### Navigate to the project directory
 
-   `shell cd upSells-v1`
+   ` cd upSells-v1`
 
 3. ### Install dependencies
 
    Using npm:
-   `shell npm install`
+   ` npm install`
 
 4. ### Start the development server
    Using npm:
