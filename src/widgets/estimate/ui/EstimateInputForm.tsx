@@ -23,13 +23,16 @@ export function EstimateInputForm(): JSX.Element {
   const {
     estimateNumb,
     setEstimateNumb,
+    estimateDescription,
     estimateHandlerSubmit,
     handlerInputChange,
     setHourlyRate,
     setEstimateDescription,
     setMaterialCost,
     setTimeRequired,
-    fetchDataAndUpdateState,
+    hourlyRate,
+    timeRequired,
+    materialCost,
   } = useAddEstimate();
   const { handleAddTechClick, handleRemoveTechClick, addTech } = useAddWorker();
 
@@ -73,6 +76,7 @@ export function EstimateInputForm(): JSX.Element {
 
             {/*Hourly rate Input*/}
             <Form.Control
+              value={hourlyRate}
               placeholder="$65"
               type="number"
               aria-label="Technician an hour"
@@ -86,6 +90,7 @@ export function EstimateInputForm(): JSX.Element {
 
             {/*Workload Input */}
             <Form.Control
+              value={timeRequired}
               placeholder="2 hours"
               type="number"
               aria-label="Time required to complete the job"
@@ -107,6 +112,7 @@ export function EstimateInputForm(): JSX.Element {
 
             {/*Amount Input*/}
             <Form.Control
+              value={materialCost}
               type="number"
               placeholder="Amount"
               aria-label="Amount (to the nearest dollar)"
@@ -123,7 +129,7 @@ export function EstimateInputForm(): JSX.Element {
 
             {/*Description Input */}
             <Form.Control
-              // value={estimateDescription}
+              value={estimateDescription}
               as="textarea"
               placeholder="What has to be done?"
               aria-label="With textarea"

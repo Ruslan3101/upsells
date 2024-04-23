@@ -39,6 +39,8 @@ function App() {
 
               <Route path="/history" element={<History />} />
               <Route path="/reports" element={<Reports />} />
+              {/* <Route path="/admin-settings" element={<SettingsAsync />} /> */}
+
               <Route path="/admin-settings" element={<Settings />} />
             </Routes>
             {/* </ErrorBoundary> */}

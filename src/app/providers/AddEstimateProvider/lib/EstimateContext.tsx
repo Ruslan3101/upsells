@@ -21,6 +21,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Estimate } from "components/types/types";
 import db from "../../../../shared/api/firebase/connectDB";
 import { useGetData } from "../../../../shared/api/firebase/useGetData";
+import { useGetDataCard } from "../../../../shared/api/firebase/useGetDataCard";
 
 export interface AddEstimateProps {
   children: ReactNode;
@@ -33,6 +34,7 @@ export interface AddEstimateContextType {
   estimateId: string;
   isButtonDisabled: boolean;
   estimate: Estimate[];
+  lastEstimate: Estimate[];
   estimateNumb: string;
   hourlyRate: number;
   timeRequired: number;
@@ -45,6 +47,7 @@ export interface AddEstimateContextType {
   profitInPercent: number;
   accountingSettings: number;
   companyOverhead: number;
+
   estimateHandlerSubmit: (
     event: React.ChangeEvent<HTMLInputElement>
   ) => Promise<void>;
@@ -124,17 +127,19 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
 
   const [estimateNumb, setEstimateNumb] = useState<string>("");
   const [estimateId, setEstimateId] = useState<string>("");
-  const [hourlyRate, setHourlyRate] = useState<number>(0);
-  const [timeRequired, setTimeRequired] = useState<number>(0);
-  const [materialCost, setMaterialCost] = useState<number>(0);
-  const [materialTaxAmount, setMaterialTaxAmount] = useState<number>(0);
-  const [laborCost, setLaborCost] = useState<number>(0);
+  const [hourlyRate, setHourlyRate] = useState<number | string>("");
+  const [timeRequired, setTimeRequired] = useState<number | string>("");
+  const [materialCost, setMaterialCost] = useState<number | string>("");
+  const [materialTaxAmount, setMaterialTaxAmount] = useState<number | string>(
+    ""
+  );
+  const [laborCost, setLaborCost] = useState<number | string>("");
   const [workerQuantity, setWorkerQuantity] = useState<number>(1);
   const [estimateDescription, setEstimateDescription] = useState<string>("");
 
-  const [profitInPercent, setProfitInPercent] = useState<number>(0);
-  const [profitInMoney, setProfitInMoney] = useState<number>(0);
-  const [salesTax, setSalesTax] = useState<number>(0);
+  const [profitInPercent, setProfitInPercent] = useState<number | string>("");
+  const [profitInMoney, setProfitInMoney] = useState<number | string>("");
+  const [salesTax, setSalesTax] = useState<number | string>("");
 
   const [sellingPrice, setSellingPrice] = useState<number>(0);
   const [markUp, setMarkUp] = useState<number>(0);
@@ -151,7 +156,7 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
   const [estimate, setEstimate] = useGetData("estimate"); // Displaying Estimates Custom Hook
   const [accountingSettings, setAccountingSettings] =
     useGetData("company_settings"); // Displaying Accounting Settings Custom Hook
-
+  // const [lastEstimate, setLastEstimate]= useGetDataCard("estimate", estimateId)
   const toggleHandler = () => {
     setToggle(!toggle);
   };
@@ -271,11 +276,11 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
     inputName: (value: number | string) => void
   ) => {
     event.preventDefault();
-    const numberValue =
+    const value =
       inputName === setEstimateNumb || inputName === setEstimateDescription
         ? event.target.value
         : +event.target.value;
-    inputName(numberValue);
+    inputName(value);
     setIsButtonDisabled(false);
   };
 
@@ -338,6 +343,7 @@ export function AddEstimateProvider({ children }: AddEstimateProps) {
     isButtonDisabled,
     accountingSettings,
     AccountingSettingsHandlerSubmit,
+    // lastEstimate,
   };
   return (
     <AddEstimateContext.Provider value={contextValue}>
